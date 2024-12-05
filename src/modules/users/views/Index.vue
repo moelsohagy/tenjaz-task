@@ -1,15 +1,34 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import PageHeader from '../../../components/PageHeader.vue'
-import UserModal from '../components/UserModal.vue'
 import usersServices from '../services/users'
 
 const loading = ref(true)
-const modalOpend = ref(false)
-const modalType = ref('')
-const textSearch = ref('')
 
+const filter = reactive({
+  name: '',
+  status: ''
+})
 const users = reactive([])
+
+const filteredUsers = computed(() => {
+  if (filter.name != '' && filter.status != '')
+    return users.filter(
+      (i) =>
+        `${i.firstName} ${i.lastName}`
+          .toLowerCase()
+          .includes(filter.name.toLowerCase()) && filter.status == i.status
+    )
+  else if (filter.name != '')
+    return users.filter((i) =>
+      `${i.firstName} ${i.lastName}`
+        .toLowerCase()
+        .includes(filter.name.toLowerCase())
+    )
+  else if (filter.status != '')
+    return users.filter((i) => filter.status == i.status)
+  else return users
+})
 
 const getAllUsers = () => {
   loading.value = true
@@ -33,11 +52,6 @@ const getAllUsers = () => {
     })
 }
 
-const openCreateModal = () => {
-  modalOpend.value = true
-  modalType.value = 'create'
-}
-
 getAllUsers()
 </script>
 
@@ -46,17 +60,29 @@ getAllUsers()
     <PageHeader title="Users" />
 
     <div class="flex justify-between mb-4">
-      <input
-        type="search"
-        name="search"
-        id="search"
-        placeholder="Search"
-        v-model="textSearch"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-      />
+      <div class="flex gap-4">
+        <input
+          type="search"
+          name="search"
+          id="search"
+          placeholder="Search by name"
+          v-model="filter.name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+          autocomplete="off"
+        />
+
+        <select
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+          v-model="filter.status"
+        >
+          <option value="">Choose status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
 
       <router-link
-        to="/users/create"
+        :to="{ name: 'Users.Create' }"
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
       >
         Create User
@@ -95,7 +121,7 @@ getAllUsers()
           </template>
           <template v-else>
             <tr
-              v-for="i in users"
+              v-for="i in filteredUsers"
               :key="i.id"
               class="bg-white border-b hover:bg-gray-50"
             >
@@ -112,12 +138,12 @@ getAllUsers()
                 {{ i.status }}
               </td>
               <td class="flex gap-4 px-6 py-4">
-                <button
-                  href="#"
+                <router-link
+                  :to="{ name: 'Users.Update', params: { id: i.id } }"
                   class="font-medium text-blue-600 hover:underline"
                 >
                   Edit
-                </button>
+                </router-link>
                 <button
                   href="#"
                   class="font-medium text-red-600 hover:underline"
@@ -130,7 +156,5 @@ getAllUsers()
         </tbody>
       </table>
     </div>
-
-    <UserModal v-if="modalOpend" />
   </div>
 </template>
