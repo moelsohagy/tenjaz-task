@@ -3,6 +3,9 @@ import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showAlert } from '../../../utils/sweetalert'
 import PageHeader from '../../../components/PageHeader.vue'
+import Spinner from '../../../components/Spinner.vue'
+import MainInput from '../../../components/inputs/MainInput.vue'
+import MainSelect from '../../../components/inputs/MainSelect.vue'
 import usersServices from '../services/users'
 
 const route = useRoute()
@@ -17,8 +20,14 @@ const errors = ref({})
 const user = reactive({
   name: '',
   email: '',
-  status: true
+  status: ''
 })
+
+const statusOptions = [
+  { value: '', label: 'Choose status' },
+  { value: 'active', label: 'Active' },
+  { value: 'inactive', label: 'Inactive' }
+]
 
 const disableStatus = computed(() => {
   switch (pageType) {
@@ -83,7 +92,7 @@ const findOne = () => {
     .then((response) => {
       user.name = response?.data?.firstName || ''
       user.email = response?.data?.email || ''
-      user.status = true
+      user.status = 'active'
     })
     .catch((error) => {
       showAlert(error?.response?.data?.message || 'ERROR', 'error')
@@ -100,23 +109,45 @@ else loading.value = false
 <template>
   <PageHeader :title="pageTitle" />
 
-  <form @submit.prevent="submit">
-    <div>
-      <input
-        v-model="user.name"
+  <form
+    @submit.prevent="submit"
+    class="xl:w-2/3 border border-gray-200 rounded-lg shadow p-4"
+  >
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <MainInput
         id="name"
         label="Name"
         placeholder="Enter name"
         :disabled="disableStatus"
+        v-model="user.name"
+      />
+
+      <MainInput
+        id="email"
+        label="Email"
+        placeholder="Enter email"
+        :disabled="disableStatus"
+        v-model="user.email"
+      />
+
+      <MainSelect
+        id="status"
+        label="Status"
+        placeholder="Enter status"
+        :disabled="disableStatus"
+        :options="statusOptions"
+        v-model="user.status"
       />
     </div>
 
-    <div>
+    <div v-if="!disableStatus">
       <button
         type="submit"
-        class="text-white capitalize bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
+        class="flex items-center gap-3 text-white capitalize bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
+        :disabled="loading"
       >
         {{ pageType }}
+        <Spinner v-if="loading" />
       </button>
     </div>
   </form>
