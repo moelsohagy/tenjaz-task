@@ -1,12 +1,8 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Users from '../views/Users.vue'
+import dashboardRoutes from '../modules/dashboard/dashboard.routes'
+import usersRoutes from '../modules/users/users.routes'
 
-const routes = [
-  { path: '/', name: 'Home', component: Home },
-  { path: '/users', name: 'Users', component: Users }
-]
+const routes = [...dashboardRoutes, ...usersRoutes]
 
 const router = createRouter({
   history: createWebHistory(),

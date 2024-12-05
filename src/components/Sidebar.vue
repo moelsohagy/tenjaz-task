@@ -61,3 +61,12 @@ const count = ref(0)
     </div>
   </aside>
 </template>
+
+<style scoped>
+.router-link-active {
+  @apply bg-gray-100;
+}
+.router-link-active svg {
+  @apply text-gray-900;
+}
+</style>
