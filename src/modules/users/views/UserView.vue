@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showAlert } from '../../../utils/sweetalert'
 import PageHeader from '../../../components/PageHeader.vue'
@@ -43,6 +43,18 @@ function submit() {
   if (!loading.value) {
     loading.value = true
     errors.value = {}
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (user.name == '') errors.value.name = 'Name is required'
+    if (!emailRegex.test(user.email)) errors.value.email = 'Email is not valid'
+    if (user.email == '') errors.value.email = 'Email is required'
+    if (user.status == '') errors.value.status = 'Status is required'
+
+    if (Object.keys(errors.value).length > 0) {
+      loading.value = false
+      return true
+    }
 
     switch (pageType) {
       case 'create':
@@ -102,6 +114,19 @@ const findOne = () => {
     })
 }
 
+watch(
+  () => user.name,
+  () => delete errors.value.name
+)
+watch(
+  () => user.email,
+  () => delete errors.value.email
+)
+watch(
+  () => user.status,
+  () => delete errors.value.status
+)
+
 if (pageType != 'create') findOne()
 else loading.value = false
 </script>
@@ -119,6 +144,7 @@ else loading.value = false
         label="Name"
         placeholder="Enter name"
         :disabled="disableStatus"
+        :errors="errors.name"
         v-model="user.name"
       />
 
@@ -127,6 +153,7 @@ else loading.value = false
         label="Email"
         placeholder="Enter email"
         :disabled="disableStatus"
+        :errors="errors.email"
         v-model="user.email"
       />
 
@@ -136,6 +163,7 @@ else loading.value = false
         placeholder="Enter status"
         :disabled="disableStatus"
         :options="statusOptions"
+        :errors="errors.status"
         v-model="user.status"
       />
     </div>

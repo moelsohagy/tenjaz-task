@@ -10,7 +10,8 @@ const props = defineProps({
   type: { type: String, default: '' },
   disabled: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
-  autocomplete: { type: Boolean, default: false }
+  autocomplete: { type: Boolean, default: false },
+  errors: { type: [String, Array], default: '' }
 })
 </script>
 
@@ -36,5 +37,12 @@ const props = defineProps({
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     />
+
+    <div
+      v-if="(Array.isArray(errors) && errors.length) || errors.length"
+      class="text-red-500 text-sm"
+    >
+      {{ Array.isArray(errors) ? errors[0] : errors }}
+    </div>
   </div>
 </template>
