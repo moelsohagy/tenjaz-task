@@ -1,5 +1,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { showAlert } from '../../../utils/sweetalert'
+import Swal from 'sweetalert2'
 import PageHeader from '../../../components/PageHeader.vue'
 import usersServices from '../services/users'
 
@@ -29,6 +31,32 @@ const filteredUsers = computed(() => {
     return users.filter((i) => filter.status == i.status)
   else return users
 })
+
+const deleteUser = (id) => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      loading.value = true
+      usersServices
+        .remove(id)
+        .then(() => {
+          const index = users.findIndex((i) => i.id == id)
+          if (index > -1) users.splice(index, 1)
+          showAlert('Deleted successfully', 'success')
+        })
+        .finally(() => {
+          loading.value = false
+        })
+    }
+  })
+}
 
 const getAllUsers = () => {
   loading.value = true
@@ -145,8 +173,8 @@ getAllUsers()
                   Edit
                 </router-link>
                 <button
-                  href="#"
                   class="font-medium text-red-600 hover:underline"
+                  @click="deleteUser(i.id)"
                 >
                   Delete
                 </button>
