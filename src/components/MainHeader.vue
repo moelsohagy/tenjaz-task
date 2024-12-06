@@ -1,11 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { defineEmits } from 'vue'
 
-defineProps({
-  msg: String
-})
-
-const count = ref(0)
+const emit = defineEmits(['changeOpened'])
 </script>
 
 <template>
@@ -19,6 +15,7 @@ const count = ref(0)
             aria-controls="logo-sidebar"
             type="button"
             class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            @click="emit('changeOpened')"
           >
             <span class="sr-only">Open sidebar</span>
             <svg

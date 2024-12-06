@@ -87,8 +87,8 @@ getAllUsers()
   <div>
     <PageHeader title="Users" />
 
-    <div class="flex justify-between mb-4">
-      <div class="flex gap-4">
+    <div class="flex justify-between flex-wrap gap-4 mb-4">
+      <div class="flex flex-wrap gap-4">
         <input
           type="search"
           name="search"
