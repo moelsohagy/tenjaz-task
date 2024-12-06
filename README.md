@@ -48,8 +48,8 @@ This project is a **responsive dashboard** built with **Vue.js** and **Tailwind 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-repository-url.git
-   cd your-repository-folder
+   git clone https://github.com/moelsohagy/tenjaz-task.git
+   cd tenjaz-task
    ```
 
 2. Install dependencies:
