@@ -42,7 +42,24 @@ const emit = defineEmits(['changeOpened'])
         </div>
         <div class="flex items-center">
           <div class="flex items-center ms-3">
-            <div>
+            <div class="flex gap-4">
+              <button
+                type="button"
+                class="flex text-sm rounded-full"
+                aria-expanded="false"
+                data-dropdown-toggle="dropdown-user"
+              >
+                <svg
+                  class="w-8"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 32 32"
+                  id="notification"
+                >
+                  <path
+                    d="M26.59 21.17a2 2 0 0 1-.59-1.41V14a10 10 0 0 0-7.64-9.71 2.47 2.47 0 0 0 .14-.79 2.5 2.5 0 0 0-5 0 2.47 2.47 0 0 0 .14.79A10 10 0 0 0 6 14v5.76a2 2 0 0 1-.59 1.41A4.79 4.79 0 0 0 4 24.59V25a2 2 0 0 0 2 2h7.18a3 3 0 0 0-.18 1 3 3 0 0 0 6 0 3 3 0 0 0-.18-1H26a2 2 0 0 0 2-2v-.41a4.79 4.79 0 0 0-1.41-3.42ZM15.5 3.5a.5.5 0 1 1 .5.5.5.5 0 0 1-.5-.5Z"
+                  ></path>
+                </svg>
+              </button>
               <button
                 type="button"
                 class="flex text-sm rounded-full"
